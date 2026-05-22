@@ -3,14 +3,15 @@ import { db } from "@/lib/db"
 import { sendPlanActivatedEmail } from "@/lib/resend"
 import { cookies } from "next/headers"
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const cookieStore = await cookies()
   const adminSession = cookieStore.get("admin-session")
   if (!adminSession) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
+  const { id } = await params
   try {
     const invoice = await db.invoice.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { tenant: { include: { owner: true } } },
     })
 
