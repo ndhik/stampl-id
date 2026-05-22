@@ -35,7 +35,7 @@ export default async function AdminTenantsPage() {
             <span className="col-span-2">Members</span>
             <span className="col-span-2">Bergabung</span>
           </div>
-          {tenants.map((t) => (
+          {tenants.map((t: typeof tenants[0]) => (
             <div key={t.id} className="grid grid-cols-12 gap-3 px-4 py-3 border-b border-[#1A1A1A] items-center hover:bg-[#1A1A1A]">
               <div className="col-span-3">
                 <div className="font-medium text-sm text-[#E8E4DC] truncate">{t.name}</div>

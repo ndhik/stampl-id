@@ -14,7 +14,7 @@ export default async function InboxPage() {
     where: { userId: session.user.id },
     select: { tenantId: true },
   })
-  const tenantIds = memberships.map(m => m.tenantId)
+  const tenantIds = memberships.map((m: typeof memberships[0]) => m.tenantId)
 
   const messages = await db.message.findMany({
     where: { tenantId: { in: tenantIds } },
@@ -29,7 +29,7 @@ export default async function InboxPage() {
         <h1 className="font-syne font-bold text-xl text-[#1C1C1C]">Inbox</h1>
       </header>
       <main className="max-w-lg mx-auto px-4 py-4 space-y-3">
-        {messages.map(m => (
+        {messages.map((m: typeof messages[0]) => (
           <Card key={m.id}>
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">

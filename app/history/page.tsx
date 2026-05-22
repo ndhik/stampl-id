@@ -29,7 +29,7 @@ export default async function HistoryPage() {
             <p className="text-[#888] text-sm">Kumpulkan stamp dan klaim reward pertamamu!</p>
           </div>
         ) : (
-          claims.map((c) => (
+          claims.map((c: typeof claims[0]) => (
             <Link key={c.id} href={`/${c.membership.tenant.slug}`} className="flex items-center gap-3 bg-white border border-[#E8E2D8] rounded-xl p-4 hover:border-[#E8A838] transition-colors">
               <div className="w-10 h-10 bg-[#FDF3DC] rounded-lg flex items-center justify-center text-lg overflow-hidden flex-shrink-0">
                 {c.membership.tenant.logoUrl ? <img src={c.membership.tenant.logoUrl} alt="" className="w-full h-full object-cover rounded-lg" /> : "🏆"}

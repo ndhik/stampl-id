@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { auth } from "@/lib/auth"
 
-export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   const tenant = await db.tenant.findUnique({
-    where: { slug: params.slug, isActive: true },
+    where: { slug, isActive: true },
     select: {
       id: true, slug: true, name: true, category: true, city: true,
       logoUrl: true, description: true, themeId: true, stampDesignId: true,

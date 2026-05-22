@@ -28,7 +28,7 @@ export default async function MembershipsPage() {
             <p className="text-[#888] text-sm">Scan QR di toko favoritmu untuk mulai.</p>
           </div>
         ) : (
-          memberships.map((m) => {
+          memberships.map((m: typeof memberships[0]) => {
             const isReady = m.stampsCollected >= m.tenant.stampCount
             const progress = Math.min((m.stampsCollected / m.tenant.stampCount) * 100, 100)
             return (

@@ -57,7 +57,7 @@ export default async function HomePage() {
               <Link href="/memberships" className="text-sm text-[#888] hover:text-[#1C1C1C]">Lihat semua</Link>
             </div>
             <div className="space-y-3">
-              {memberships.map((m) => {
+              {memberships.map((m: typeof memberships[0]) => {
                 const progress = (m.stampsCollected / m.tenant.stampCount) * 100
                 const isReady = m.stampsCollected >= m.tenant.stampCount
                 return (

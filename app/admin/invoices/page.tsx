@@ -1,4 +1,7 @@
 import { db } from "@/lib/db"
+import type { Invoice, Tenant } from "@prisma/client"
+
+type InvoiceWithTenant = Invoice & { tenant: Pick<Tenant, "name" | "slug"> }
 import { formatRupiah } from "@/lib/utils"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
@@ -26,7 +29,7 @@ export default async function AdminInvoicesPage() {
           <div className="grid grid-cols-6 gap-4 px-4 py-3 text-xs text-[#555] font-syne font-bold uppercase tracking-wide border-b border-[#1E1E1E]">
             <span className="col-span-2">Tenant</span><span>Plan</span><span>Nominal</span><span>Kode</span><span>Status</span>
           </div>
-          {invoices.map((inv) => (
+          {invoices.map((inv: InvoiceWithTenant) => (
             <Link key={inv.id} href={`/invoices/${inv.id}`} className="grid grid-cols-6 gap-4 px-4 py-3 border-b border-[#1A1A1A] hover:bg-[#1A1A1A] items-center">
               <span className="col-span-2 text-sm font-medium text-[#E8E4DC]">{inv.tenant.name}</span>
               <span className="text-sm text-[#888] capitalize">{inv.plan} / {inv.period === "monthly" ? "bln" : "thn"}</span>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { cookies } from "next/headers"
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const cookieStore = await cookies()
   if (!cookieStore.get("admin-session")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     }),
   ])
 
-  const mrr = paidThisMonth.reduce((sum, inv) => sum + inv.amount + inv.uniqueCode, 0)
+  const mrr = paidThisMonth.reduce((sum: number, inv: { amount: number; uniqueCode: number }) => sum + inv.amount + inv.uniqueCode, 0)
 
   return NextResponse.json({ totalTenants, totalUsers, totalStamps, pendingInvoices, mrr })
 }

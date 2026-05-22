@@ -34,7 +34,7 @@ export default async function MembersPage() {
           </div>
         ) : (
           <div className="bg-white border border-[#E8E2D8] rounded-2xl overflow-hidden">
-            {members.map((m, i) => {
+            {members.map((m: typeof members[0], i: number) => {
               const isReady = m.stampsCollected >= m.tenant.stampCount
               return (
                 <div key={m.id} className={`flex items-center gap-4 px-5 py-4 ${i < members.length - 1 ? "border-b border-[#F5F2EC]" : ""}`}>

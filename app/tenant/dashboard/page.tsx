@@ -85,9 +85,9 @@ export default async function TenantDashboardPage() {
                 <div className="text-center py-8 text-[#888] text-sm">Belum ada stamp tercatat.</div>
               ) : (
                 <div className="flex items-end gap-1 h-24">
-                  {dailyStamps.map((d, i) => (
+                  {dailyStamps.map((d: typeof dailyStamps[0], i: number) => (
                     <div key={i} className="flex-1 bg-[#E8A838] rounded-sm opacity-80 hover:opacity-100"
-                      style={{ height: `${Math.max(10, (d._count / Math.max(...dailyStamps.map(x => x._count))) * 100)}%` }}
+                      style={{ height: `${Math.max(10, (d._count / Math.max(...dailyStamps.map((x: typeof dailyStamps[0]) => x._count))) * 100)}%` }}
                       title={`${d._count} stamp`} />
                   ))}
                 </div>

@@ -19,7 +19,7 @@ export default async function AdminDashboardPage() {
     }),
   ])
 
-  const mrr = recentInvoices.reduce((s, i) => s + i.amount + i.uniqueCode, 0)
+  const mrr = recentInvoices.reduce((s: number, i: { amount: number; uniqueCode: number }) => s + i.amount + i.uniqueCode, 0)
 
   const metrics = [
     { label: "Tenant Aktif", value: tenants },
