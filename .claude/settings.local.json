@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(cp /Users/andhika/Development/stampl/middleware.ts /Users/andhika/Development/stampl/proxy.ts)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(npm run *)",
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(kill 2166)",
+      "Bash(npm install *)"
+    ],
+    "additionalDirectories": [
+      "/Users/andhika/Development/stampl"
+    ]
+  }
+}

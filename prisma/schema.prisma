@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  image         String?
+  emailVerified DateTime?
+  shortId       String   @unique @default(cuid())
+  authProvider String   @default("google")
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberships  Membership[]
+  stampEvents  StampEvent[]
+  accounts     Account[]
+  sessions     Session[]
+  tenant       Tenant?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Tenant {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  category         String
+  city             String
+  logoUrl          String?
+  description      String?
+  plan             String   @default("free")
+  themeId          String   @default("default")
+  stampDesignId    String   @default("classic")
+  stampCount       Int      @default(10)
+  rewardText       String   @default("1 item gratis")
+  rewardImageUrl   String?
+  validityMonths   Int      @default(12)
+  dailyLimit       Int?
+  welcomingReward  Boolean  @default(false)
+  welcomingText    String?
+  isActive         Boolean  @default(true)
+  onboardingDone   Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  ownerId      String  @unique
+  owner        User    @relation(fields: [ownerId], references: [id])
+
+  memberships  Membership[]
+  messages     Message[]
+  invoices     Invoice[]
+  subscription Subscription?
+
+  @@map("tenants")
+}
+
+model Membership {
+  id               String    @id @default(cuid())
+  userId           String
+  tenantId         String
+  stampsCollected  Int       @default(0)
+  createdAt        DateTime  @default(now())
+  lastStampAt      DateTime?
+  updatedAt        DateTime  @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  tenant       Tenant       @relation(fields: [tenantId], references: [id])
+  stampEvents  StampEvent[]
+  rewardClaims RewardClaim[]
+
+  @@unique([userId, tenantId])
+  @@map("memberships")
+}
+
+model StampEvent {
+  id           String   @id @default(cuid())
+  membershipId String
+  stampedById  String?
+  method       String   @default("qr_scan")
+  createdAt    DateTime @default(now())
+
+  membership Membership @relation(fields: [membershipId], references: [id])
+  stampedBy  User?      @relation(fields: [stampedById], references: [id])
+
+  @@map("stamp_events")
+}
+
+model RewardClaim {
+  id           String   @id @default(cuid())
+  membershipId String
+  claimedAt    DateTime @default(now())
+
+  membership Membership @relation(fields: [membershipId], references: [id])
+
+  @@map("reward_claims")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  tenantId  String
+  content   String
+  sentAt    DateTime @default(now())
+
+  tenant    Tenant        @relation(fields: [tenantId], references: [id])
+  reads     MessageRead[]
+
+  @@map("messages")
+}
+
+model MessageRead {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  readAt    DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+
+  @@map("message_reads")
+}
+
+model Subscription {
+  id              String   @id @default(cuid())
+  tenantId        String   @unique
+  plan            String
+  status          String   @default("active")
+  currentPeriodEnd DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id           String    @id @default(cuid())
+  tenantId     String
+  plan         String
+  period       String
+  amount       Int
+  uniqueCode   Int
+  transferCode String    @unique
+  status       String    @default("pending")
+  createdAt    DateTime  @default(now())
+  paidAt       DateTime?
+  expiresAt    DateTime
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@map("invoices")
+}
