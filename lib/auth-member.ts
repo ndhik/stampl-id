@@ -9,6 +9,7 @@ const secure = process.env.NODE_ENV === "production"
 const cookieOpts = { httpOnly: true, sameSite: "lax" as const, secure, path: "/" }
 
 export const { handlers: memberHandlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
   adapter: PrismaAdapter(db),
   trustHost: true,
   cookies: {
@@ -21,6 +22,7 @@ export const { handlers: memberHandlers, signIn, signOut, auth } = NextAuth({
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      checks: ["state"],
     }),
     Credentials({
       id: "member-credentials",
