@@ -7,12 +7,12 @@ async function getHandlers() {
   return host.startsWith("tenant.") ? tenantHandlers : memberHandlers
 }
 
-export async function GET(req: Request, ctx: { params: Promise<{ nextauth: string[] }> }) {
+export async function GET(req: Request) {
   const h = await getHandlers()
-  return h.GET(req, ctx as never)
+  return h.GET(req)
 }
 
-export async function POST(req: Request, ctx: { params: Promise<{ nextauth: string[] }> }) {
+export async function POST(req: Request) {
   const h = await getHandlers()
-  return h.POST(req, ctx as never)
+  return h.POST(req)
 }
